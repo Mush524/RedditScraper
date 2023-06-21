@@ -11,7 +11,7 @@ url = "https://old.reddit.com/r/"+sub
 cat = {"top":"/top/?sort=top&t=", "hot":"", "new":"/new/", "controversial":"/controversial/"}
 choice = input("Category to scrape [top,hot,new,controversial]: ")   
 a = 1
-path = list("RedditScraper/"+sub+choice.capitalize())
+path = list(sub+choice.capitalize())
 
 if choice == "top":
     time = input("Top posts from [day,month,week,year,all]: ")
@@ -31,6 +31,11 @@ print("Scraping "+url)
 headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0"}
 cookies = {"over18": "1"}
 
+def makeSoup(post):
+    r2 = requests.get(post, headers=headers, cookies=cookies)
+    soup2 = BeautifulSoup(r2.text, 'html.parser')
+    return soup2
+
 #Will find the image link depending on the kind of post
 def findImage(post):
     if post[-4] == ".":
@@ -41,8 +46,7 @@ def findImage(post):
         return None
 
     elif "comments/" in post:
-        r2 = requests.get("https://old.reddit.com"+post, headers=headers, cookies=cookies)
-        soup2 = BeautifulSoup(r2.text, 'html.parser')
+        soup2 = makeSoup("https://old.reddit.com"+post)
         if soup2.find("img", {"class":"preview"}):
             #This will replace the link same as with a gallery
             commentLink = soup2.find("img", {"class":"preview"}).get("src")
@@ -53,8 +57,7 @@ def findImage(post):
     elif "gallery/" in post:
         gallery = []
         i = 0
-        r2 = requests.get(post, headers=headers, cookies=cookies)
-        soup2 = BeautifulSoup(r2.text, 'html.parser')
+        soup2 = makeSoup(post)
         #If the post is a gallery the link will be scraped for each image
         for item2 in soup2.find_all("a", {"target":"_blank"}):
             if "comments/" not in item2.get("href"):
@@ -83,14 +86,12 @@ while x <= times:
 
         if link == "gallery":
             x += 1
-            if x >= times:
-                break
+            if x >= times:break
 
         elif link != None:
             os.system(f"wget -O {path}/{str(x)+link[-4:]} {link}")
             x += 1
-            if x >= times:
-                break
+            if x >= times:break
             sleep(random.uniform(0.2, 2))
 
     try:
