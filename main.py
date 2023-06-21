@@ -36,7 +36,7 @@ def findImage(post):
     if post[-4] == ".":
         return post
 
-    #Advert returns None
+    #Advert will return None
     elif "https://alb.reddit.com/" in post:
         return None
 
