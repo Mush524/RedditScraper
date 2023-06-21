@@ -21,6 +21,7 @@ else:
     url += cat[choice]
 
 path += str(a)
+#Checks if the directory name alread exists then makes a new one
 while os.path.exists("".join(path)):
     a += 1
     path[-1] = str(a)
@@ -48,7 +49,7 @@ def findImage(post):
     elif "comments/" in post:
         soup2 = makeSoup("https://old.reddit.com"+post)
         if soup2.find("img", {"class":"preview"}):
-            #This will replace the link same as with a gallery
+            #This will replace the link same as with a gallery post
             commentLink = soup2.find("img", {"class":"preview"}).get("src")
             return commentLink.replace("preview.redd.it", "i.redd.it").split(".jpg", 1)[0]+".jpg"       
         else:
