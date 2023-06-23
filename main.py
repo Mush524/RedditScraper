@@ -53,7 +53,7 @@ def findImage(post):
             commentLink = soup2.find("img", {"class":"preview"}).get("src")
             return commentLink.replace("preview.redd.it", "i.redd.it").split(".jpg", 1)[0]+".jpg"       
         else:
-            return None 
+            return "text" 
 
     elif "gallery/" in post:
         gallery = []
@@ -85,15 +85,13 @@ while x <= times:
     for item in soup.find_all("a", {"data-event-action":"title"}):
         link = findImage(item.get("href"))   
 
-        if link == "gallery":
-            x += 1
-            if x >= times:break
-
-        elif link != None:
+        if link != None and link != "gallery" and link != "text":
             os.system(f"wget -O {path}/{str(x)+link[-4:]} {link}")
+            sleep(random.uniform(0.2, 2))
+
+        if link != "text":
             x += 1
             if x >= times:break
-            sleep(random.uniform(0.2, 2))
 
     try:
         url = soup.find("a", {"rel":"nofollow next"}).get('href')
