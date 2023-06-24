@@ -8,12 +8,12 @@ from bs4 import BeautifulSoup
 sub = input("Sub to scrape r/")
 url = "https://old.reddit.com/r/"+sub
 
-cat = {"top":"/top/?sort=top&t=", "hot":"", "new":"/new/", "controversial":"/controversial/"}
+cat = {"top":"/top/?sort=top&t=", "hot":"", "new":"/new/", "controversial":"/controversial/?sort=controversial&t="}
 choice = input("Category to scrape [top,hot,new,controversial]: ")   
 a = 1
 path = list(sub+choice.capitalize())
 
-if choice == "top":
+if choice == "top" or choice == "controversial":
     time = input("Top posts from [day,month,week,year,all]: ")
     url += cat[choice]+time 
     path += time.capitalize()
