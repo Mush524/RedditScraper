@@ -9,15 +9,15 @@ sub = input("Sub to scrape r/")
 url = "https://old.reddit.com/r/"+sub
 
 cat = {"top":"/top/?sort=top&t=", "hot":"", "new":"/new/", "controversial":"/controversial/?sort=controversial&t="}
-choice = input("Category to scrape [top,hot,new,controversial]: ")   
+choice = input("Category to scrape [top,hot,new,controversial]: ")
 a = 1
 path = list(sub+choice.capitalize())
 
 if choice == "top" or choice == "controversial":
     time = input("Top posts from [day,month,week,year,all]: ")
-    url += cat[choice]+time 
+    url += cat[choice]+time
     path += time.capitalize()
-else: 
+else:
     url += cat[choice]
 
 path += str(a)
@@ -51,9 +51,9 @@ def findImage(post):
         if soup2.find("img", {"class":"preview"}):
             #This will replace the link same as with a gallery post
             commentLink = soup2.find("img", {"class":"preview"}).get("src")
-            return commentLink.replace("preview.redd.it", "i.redd.it").split(".jpg", 1)[0]+".jpg"       
+            return commentLink.replace("preview.redd.it", "i.redd.it").split(".jpg", 1)[0]+".jpg"
         else:
-            return "text" 
+            return "text"
 
     elif "gallery/" in post:
         gallery = []
@@ -69,7 +69,7 @@ def findImage(post):
                 sleep(random.uniform(0.2, 2))
 
         return "gallery"
-        
+
 x = 1
 times = int(input("Number of posts to scrape: "))
 
@@ -83,7 +83,7 @@ while x <= times:
 
     #For each post the link will be found with findImage and then saved with wget
     for item in soup.find_all("a", {"data-event-action":"title"}):
-        link = findImage(item.get("href"))   
+        link = findImage(item.get("href"))
 
         if link != None and link != "gallery" and link != "text":
             os.system(f"wget -O {path}/{str(x)+link[-4:]} {link}")
