@@ -2,6 +2,7 @@ import os
 import random
 import requests
 from os import path
+import urllib.request, json 
 from time import sleep
 from bs4 import BeautifulSoup
 
@@ -39,12 +40,19 @@ def makeSoup(post):
 
 #Will find the image link depending on the kind of post
 def findImage(post):
-    if post[-4] == ".":
+    if post[-4] == "." and "https://i.imgur.com/" not in post:
         return post
 
     #Advert will return None
     elif "https://alb.reddit.com/" in post:
         return None
+
+    #Imgur links will be scraped from the wayback machine incase they were removed
+    elif "https://i.imgur.com/" in post:
+        with urllib.request.urlopen('https://archive.org/wayback/available?url='+post) as archive:
+            data = json.load(archive)
+            #Gets link from the wayback machine API and returns it
+            return data["archived_snapshots"]["closest"]["url"]
 
     elif "comments/" in post:
         soup2 = makeSoup("https://old.reddit.com"+post)
